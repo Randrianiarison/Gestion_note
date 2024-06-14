@@ -13,12 +13,19 @@ return new class extends Migration
     {
         Schema::create('inscrits', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_etudiant');
-            $table->integer('id_cours');
+            $table->unsignedBigInteger('id_etudiant');
+            $table->unsignedBigInteger('id_cours');
             $table->integer('id_prof');
-            $table->string('semestre');
+            $table->integer('semestre');
+            $table->string('annee_scolaire');
             $table->timestamps();
+
+
+            $table->foreign('id_prof')->references('id_prof')->on('cours')->onDelete('cascade');
+            $table->foreign('id_etudiant')->references('id')->on('etudiants')->onDelete('cascade');
+            $table->foreign('id_cours')->references('id')->on('cours')->onDelete('cascade');
         });
+
     }
 
     /**

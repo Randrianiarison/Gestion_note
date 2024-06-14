@@ -156,7 +156,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name }}</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"> {{ auth()->user()->name }}</span>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
@@ -214,6 +214,8 @@
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
                                         </form>
+                                        <a class="btn btn-info btn-sm" href="{{ route('inscription.home', ['id' => $etudiant->id]) }}">Inscription</a>
+
                                     </td>
                                 </tr>
                                 @endforeach
@@ -237,7 +239,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Gestion de note &copy; Randrianiarison Johnson</span>
+{{--                        <span>Gestion de note &copy; Randrianiarison Johnson</span>--}}
                     </div>
                 </div>
             </footer>
@@ -249,7 +251,7 @@
     </div>
     <!-- End of Page Wrapper -->
 
-    <
+
 
 
 
@@ -298,6 +300,9 @@
 
 
 
+
+
+
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -328,6 +333,9 @@
             document.getElementById('prenom').value = etudiant.prenom;
             document.getElementById('email').value = etudiant.email;
             document.getElementById('btn-save').textContent = 'Mettre à jour';
+        }
+        function setModalInscrit(){
+
         }
     </script>
 

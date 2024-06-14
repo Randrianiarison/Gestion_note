@@ -234,7 +234,7 @@
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span>Gestion de note &copy; Randrianiarison Johnson</span>
+{{--                    <span>Gestion de note &copy; Randrianiarison Johnson</span>--}}
                 </div>
             </div>
         </footer>

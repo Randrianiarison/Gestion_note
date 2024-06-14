@@ -2,22 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cours;
+use App\Models\User;
 use http\Env\Response;
 use App\Models\Etudiant;
 use Illuminate\Http\Request;
 
 class EtudiantController extends Controller
 {
+
     public function index(){
         $etudiants = Etudiant::all();
+        $cours = Cours::all();
+        $users= User::all();
 //        if (request()->ajax()) {
 //            return response()->json($etudiants);
 //        }
 //        return response()->json($etudiants);
-         return view('student.index', compact('etudiants'));
+         return view('student.index', compact('etudiants','cours','users'));
 
     }
 
+    public function inscrit()
+    {
+        $etudiants = Etudiant::all();
+        $cours = Cours::all();
+        return view('cours.inscrit',compact('etudiants','cours'));
+    }
     public function store(Request $request)
     {
        $studentId = $request->id;

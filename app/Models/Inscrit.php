@@ -13,5 +13,19 @@ class Inscrit extends Model
         'id_cours',
         'id_prof',
         'semestre',
+        'annee_scolaire',
     ];
+    public function etudiant()
+    {
+        return $this->belongsTo(Etudiant::class, 'id_etudiant');
+    }
+
+    public function cours()
+    {
+        return $this->belongsTo(Cours::class, 'id_cours');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_prof');
+    }
 }

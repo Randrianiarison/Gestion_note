@@ -11,5 +11,17 @@ class Cours extends Model
     protected $fillable = [
         'sigle',
         'titre',
+        'id_prof'
     ];
+    public function inscrits()
+    {
+        return $this->hasMany(Inscrit::class, 'id_cours');
+    }
+
+    public function etudiants()
+    {
+        return $this->belongsToMany(Etudiant::class, 'inscrits', 'id_cours', 'id_etudiant')
+            ->withPivot('semestre', 'annee_scolaire')
+            ->withTimestamps();
+    }
 }

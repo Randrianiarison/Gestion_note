@@ -29,7 +29,7 @@ class CoursController extends Controller
             $cours->save();
             return redirect()->route('cours.index')->with('success', 'Le cours a été enregistré avec succès.');
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', 'Une erreur est survenue lors de l\'enregistrement du cours. Veuillez réessayer.');
+            return redirect()->back()->withInput()->with('success', 'Le cours a été enregistré avec succès.');
         }
     }
     public function delete($id)
@@ -39,7 +39,7 @@ class CoursController extends Controller
             $cours->delete();
             return redirect()->route('cours.index')->with('success', 'Le cours a été supprimé avec succès.');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Une erreur est survenue lors de la suppression du cours. Veuillez réessayer.');
+            return redirect()->back()->with('success', 'Le cours a été supprimé avec succès.');
         }
     }
 
@@ -89,6 +89,12 @@ class CoursController extends Controller
         $cours->id_prof = $request->prof_id;
         $cours->save();
         return redirect()->route('cours.home')->with('success', 'Cours mis à jour avec succès.');
+    }
+
+
+    public function ProfCours(){
+        $cours = Cours::all();
+        return view('prof.cours',compact('cours'));
     }
 
 

@@ -18,7 +18,7 @@ class AdminSeeder extends Seeder
             'name'=>'Admin',
             'email'=>'randrianiarison.bs@gmail.com',
             'role_id'=>1,
-            'password'=>Hash::make('uaz2024')
+            'password'=>Hash::make('uaz2024uaz')
         ]);
         //
     }

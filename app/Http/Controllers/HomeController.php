@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cours;
+use App\Models\Etudiant;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +26,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        if (auth()->user()->role_id == 1) {
+            return view('home');
+        } elseif (auth()->user()->role_id == 2) {
+            return redirect()->route('prof.home');
+        } else {
+        return view('default');
     }
+}
+
+
 }

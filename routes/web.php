@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\InscritController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CoursController;
@@ -25,10 +27,12 @@ Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('/student',[EtudiantController::class,'index'])->name('etudiant');
+
+Route::get('/etudiant',[EtudiantController::class,'index'])->name('etudiant');
 Route::post('/etudiant', [EtudiantController::class, 'store'])->name('etudiant.store');
 Route::put('/student/{id}', [EtudiantController::class, 'update'])->name('etudiant.update');
 Route::delete('/etudiant/{id}', [EtudiantController::class, 'delete'])->name('etudiant.delete');
+Route::get('/student',[EtudiantController::class,'inscrit'])->name('etudiant.inscrit');
 
 
 
@@ -48,6 +52,13 @@ Route::delete('/user/{id}', [UserController::class, 'delete'])->name('user.delet
 Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
 
 
+Route::get('/inscription', [InscritController::class, 'index'])->name('inscription.home');
+Route::post('/inscription',[InscritController::class,'store'])->name('inscription.store');
+Route::get('/cours/{cours_id}/etudiants/{semestre}/{annee_scolaire}', [InscritController::class, 'etudiantInsc'])->name('cours.etudiants.inscrits');
+
+
+
+Route::get('/pro',[CoursController::class,'ProfCours'])->name('prof.home');
 
 
 
