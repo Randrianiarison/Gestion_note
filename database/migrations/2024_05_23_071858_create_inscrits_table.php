@@ -15,16 +15,20 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_etudiant');
             $table->unsignedBigInteger('id_cours');
-            $table->integer('id_prof');
+            $table->unsignedBigInteger('id_prof');
             $table->integer('semestre');
             $table->string('annee_scolaire');
             $table->timestamps();
 
-
-            $table->foreign('id_prof')->references('id_prof')->on('cours')->onDelete('cascade');
             $table->foreign('id_etudiant')->references('id')->on('etudiants')->onDelete('cascade');
             $table->foreign('id_cours')->references('id')->on('cours')->onDelete('cascade');
+            $table->foreign('id_prof')->references('id')->on('users')->onDelete('cascade');
+
+            $table->index('id_etudiant');
+            $table->index('id_cours');
+            $table->index('id_prof');
         });
+
 
     }
 

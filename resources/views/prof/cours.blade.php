@@ -178,53 +178,58 @@
                     </div>
                 @endif
 
-
-
-
-
-
-
-
-                    <div class="container bg">
-                        <div class="row mt-2 ml-2">
-                            @if (auth()->check())
-                                @php
-                                    $user = auth()->user();
-                                    $currentSemester = 1;
-                                    $currentSchoolYear = '2024-2025';
-                                @endphp
-                                @foreach($cours as $c)
-                                    @if ($c->id_prof === $user->id)
-                                        <div class="col-md-4 mb-4">
-                                            <div class="card">
-                                                <a href="{{ route('cours.etudiants.inscrits', ['cours_id' => $c->id, 'semestre' => $currentSemester, 'annee_scolaire' => $currentSchoolYear]) }}" class="container text-decoration-none bg-info">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title text-white">{{ $c->titre }}</h5>
-                                                        <p class="card-text text-white">Sigle: {{ $c->sigle }}</p>
+                <div class="container bg">
+                    <div class="row mt-2 ml-2">
+                        @if (auth()->check())
+                            @php
+                                $user = auth()->user();
+                            @endphp
+                            @foreach($cours as $c)
+                                @if ($c->id_prof === $user->id)
+                                    <div class="col-md-4 mb-4">
+                                        <div class="card">
+                                            <form id="cours-form-{{ $c->id }}" method="GET" action="{{ route('cours.etudiants.inscrits', ['cours_id' => $c->id, 'semestre' => '1', 'annee_scolaire' => '2024-2025']) }}">
+                                                <div class="card-body">
+                                                    <h5 class="card-title text-center text-info">{{ $c->titre }}</h5>
+                                                    <div class="form-group">
+                                                        <label for="semestre-{{ $c->id }}">Semestre:</label>
+                                                        <input type="number" id="semestre-{{ $c->id }}" name="semestre" class="form-control"max="2" min="1" value="1">
                                                     </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endforeach
-                            @else
-                                <p>Vous devez être connecté pour voir vos cours.</p>
-                            @endif
-                        </div>
-                    </div>
+                                                    <div class="form-group">
+                                                        <label for="annee_scolaire-{{ $c->id }}">Année scolaire:</label>
+                                                        <input type="text" id="annee_scolaire-{{ $c->id }}" name="annee_scolaire" class="form-control" value="2024-2025">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <button type="button" class="btn btn-info btn-sm text-white mt-2" onclick="submitForm({{ $c->id }})">
+                                                                Voir Classe
+                                                            </button>
 
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
+                        @else
+                            <p>Vous devez être connecté pour voir vos cours.</p>
+                        @endif
+                    </div>
+                </div>
 
             </div>
 
-
         </div>
+
+
+
         <!-- End of Main Content -->
 
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-{{--                    <span>Gestion de note &copy; Randrianiarison Johnson</span>--}}
+                    {{-- <span>Gestion de note &copy; Randrianiarison Johnson</span> --}}
                 </div>
             </div>
         </footer>
@@ -237,7 +242,15 @@
 <!-- End of Page Wrapper -->
 
 
-
+<script>
+    function submitForm(coursId) {
+        const form = document.getElementById(`cours-form-${coursId}`);
+        const semestre = document.getElementById(`semestre-${coursId}`).value;
+        const anneeScolaire = document.getElementById(`annee_scolaire-${coursId}`).value;
+        form.action = form.action.replace('1', semestre).replace('2024-2025', anneeScolaire);
+        form.submit();
+    }
+</script>
 
 <!-- Bootstrap core JavaScript-->
 <script src="vendor/jquery/jquery.min.js"></script>

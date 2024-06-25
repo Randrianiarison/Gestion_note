@@ -182,6 +182,21 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <button type="button" class="btn btn-outline-primary mr-5" data-toggle="modal" data-target="#modal-id"
                             onclick="setModalAdd()">
                         Ajouter

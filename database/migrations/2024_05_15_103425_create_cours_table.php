@@ -15,9 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('sigle');
             $table->string('titre');
-            $table->integer('id_prof')->nullable();
+            $table->unsignedBigInteger('id_prof')->nullable();
             $table->timestamps();
+
+            $table->foreign('id_prof')->references('id')->on('users')->onDelete('set null');
         });
+
+
     }
 
     /**
