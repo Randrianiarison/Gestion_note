@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cours;
 use App\Models\Devoir;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DevoirController extends Controller
 {
@@ -14,38 +15,46 @@ class DevoirController extends Controller
     }
     public function etudiantInsc($cours_id, $semestre, $annee_scolaire)
     {
-        $devoir = Devoir::all();
+        $devoirs = Devoir::all();
         $cours = Cours::with(['etudiants' => function($query) use ($semestre, $annee_scolaire) {
             $query->wherePivot('semestre', $semestre)
                 ->wherePivot('annee_scolaire', $annee_scolaire);
         }])->findOrFail($cours_id);
         $etudiants = $cours->etudiants;
-        return view('devoir.devoir', compact('cours', 'etudiants', 'semestre', 'annee_scolaire','devoir'));
+        return view('devoir.devoir', compact('cours', 'etudiants', 'semestre', 'annee_scolaire','devoirs'));
     }
+
 
     public function store(Request $request)
     {
         $request->validate([
+            'id_cours' => 'required|integer|exists:cours,id',
             'titre' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'commentaire' => 'nullable|string',
-            'id_prof' => 'required|exists:users,id',
-            'id_cours' => 'required|exists:cours,id',
-            'semestre' => 'required|integer',
-            'annee_scolaire' => 'required|string|max:255',
+            'semestre' => 'required|integer|in:1,2',
+            'annee_scolaire' => 'required|string',
         ]);
-
+        $id_prof = Auth::id();
         Devoir::create([
+            'id_prof' => $id_prof,
+            'id_cours' => $request->id_cours,
             'titre' => $request->titre,
             'description' => $request->description,
-            'commentaire' => $request->commentaire,
-            'id_prof' => $request->id_prof,
-            'id_cours' => $request->id_cours,
             'semestre' => $request->semestre,
             'annee_scolaire' => $request->annee_scolaire,
         ]);
+        return back()->with('success', 'Devoir créé avec succès !');
+    }
 
-        return redirect()->route('devoir.home')->with('success', 'Devoir ajouté avec succès.');
+    public function show($id_cours, $semestre, $annee_scolaire)
+    {
+        $cours = Cours::findOrFail($id_cours);
+        $devoirs = Devoir::where('id_cours', $id_cours)
+            ->where('semestre', $semestre)
+            ->where('annee_scolaire', $annee_scolaire)
+            ->get();
+
+        return view('prof.cours', compact('cours', 'semestre', 'annee_scolaire', 'devoirs'));
     }
 
 }

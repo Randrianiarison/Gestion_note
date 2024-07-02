@@ -69,11 +69,12 @@
                     <a class="nav-link" href="{{route('prof.home')}}">Accueil <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('cours.etudiants.devoir', ['cours_id' => 2, 'etudiant_id' => 1, 'annee_scolaire' => '2024-2025', 'semestre' => 1]) }}
-">Devoir</a>
+
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Note</a>
+                    <a href="{{ route('cours.somme_notes', ['cours_id' => $cours->id, 'semestre' => $semestre, 'annee_scolaire' => $annee_scolaire]) }}" class="nav-link">
+                         Notes
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Aide</a>
@@ -90,32 +91,130 @@
 
 <!-- Page Content -->
 <div class="container">
-    <div class="content">
-        <div class="classroom-header text-center">
-            <h1>{{ $cours->titre }}</h1>
-        </div>
-        <p class="mb-2">Semestre : {{ $semestre }}</p>
-        <p class="mb-4">Année scolaire : {{ $annee_scolaire }}</p>
+    <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal">
+        Ajouter
+    </button>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Détails du cours</h2>
+                <p><strong>Titre du cours:</strong> {{ $cours->titre }}</p>
+                <p><strong>Semestre:</strong> {{ $semestre }}</p>
+                <p><strong>Année scolaire:</strong> {{ $annee_scolaire }}</p>
 
-        @if($etudiants->isEmpty())
-            <div class="alert alert-warning" role="alert">
-                Aucun étudiant n'est inscrit dans ce cours pour le semestre et l'année scolaire spécifiés.
             </div>
-        @else
-            <ul class="list-group">
-                @foreach($etudiants as $etudiant)
-                    <li class="list-group-item">{{ $etudiant->nom }} {{ $etudiant->prenom }}</li>
-                @endforeach
-            </ul>
-        @endif
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h2>Liste des devoirs</h2>
+                @if ($devoirs->isEmpty())
+                    <p>Aucun devoir trouvé pour ce cours, semestre et année scolaire.</p>
+                @else
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Étudiants</th>
+                            @foreach ($devoirs as $devoir)
+                                <th>{{ $devoir->titre }}</th>
+                            @endforeach
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($cours->etudiants as $etudiant)
+                            <tr>
+                                <td>{{ $etudiant->nom }} {{ $etudiant->prenom }}</td>
+                                @foreach ($devoirs as $devoir)
+                                    <td>
+                                        @php
+                                            $note = $devoir->notes->firstWhere('id_etudiant', $etudiant->id);
+                                        @endphp
+                                        <input type="number" class="form-control form-control-sm mt-1" min="0" max="20" style="width: 100px;" value="{{ $note ? $note->note : '' }}" data-etudiant="{{ $etudiant->id }}" data-devoir="{{ $devoir->id }}">
+                                    </td>
+                                @endforeach
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                @endif
+            </div>
+        </div>
     </div>
+
+
+
+
+
 </div>
 <!-- End Page Content -->
 
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ajouter un Devoir</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('devoir.store') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="id_cours" value="{{ $cours->id }}">
+                    <input type="hidden" name="semestre" value="{{ $semestre }}">
+                    <input type="hidden" name="annee_scolaire" value="{{ $annee_scolaire }}">
+
+                    <div class="form-group">
+                        <label for="titre">Titre</label>
+                        <input type="text" class="form-control" id="titre" name="titre" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- jQuery and Bootstrap Bundle with Popper -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var inputs = document.querySelectorAll('input[type="number"]');
+
+        inputs.forEach(function (input) {
+            input.addEventListener('change', function () {
+                var etudiantId = this.dataset.etudiant;
+                var devoirId = this.dataset.devoir;
+                var note = this.value;
+
+                axios.post('/notes', {
+                    id_etudiant: etudiantId,
+                    id_devoir: devoirId,
+                    note: note
+                })
+                    .then(function (response) {
+                        console.log(response.data);
+                    })
+                    .catch(function (error) {
+                        console.error(error);
+                    });
+            });
+        });
+    });
+</script>
+
+
 </body>
 
 </html>

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cours;
+use App\Models\Devoir;
 use App\Models\Etudiant;
 use App\Models\Inscrit;
+use App\Models\Note;
 use GuzzleHttp\Promise\Coroutine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +28,6 @@ class InscritController extends Controller
 
     public function store(Request $request)
     {
-        // Validation des données soumises
         $validator = Validator::make($request->all(), [
             'id_etudiant' => 'required|integer', // ajuster selon vos besoins
             'cours' => 'required|array',
@@ -38,14 +39,12 @@ class InscritController extends Controller
             'annee_scolaire_fin.gte' => 'L\'année scolaire de fin doit être supérieure ou égale à l\'année scolaire de début.'
         ]);
 
-        // Vérification de la validation
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
         }
 
-        // Récupération des données du formulaire
         $id_etudiant = $request->id_etudiant;
         $cours = $request->cours;
         $semestre = $request->semestre;
@@ -53,20 +52,26 @@ class InscritController extends Controller
         $annee_scolaire_fin = $request->annee_scolaire_fin;
 
         try {
-            // Début de la transaction pour assurer l'intégrité des données
             DB::beginTransaction();
 
             foreach ($cours as $id_cours) {
-                // Vérification si le cours existe
                 $coursData = Cours::find($id_cours);
                 if (!$coursData) {
                     throw new \Exception('Le cours sélectionné est invalide.');
                 }
-
-                // Récupération de l'id du professeur associé au cours
                 $id_prof = $coursData->id_prof;
 
-                // Création de l'inscription
+                // Vérifier si l'étudiant est déjà inscrit à ce cours pour le même semestre et année scolaire
+                $existingInscription = Inscrit::where('id_etudiant', $id_etudiant)
+                    ->where('id_cours', $id_cours)
+                    ->where('semestre', $semestre)
+                    ->where('annee_scolaire', $annee_scolaire_debut . '-' . $annee_scolaire_fin)
+                    ->first();
+
+                if ($existingInscription) {
+                    throw new \Exception('L\'étudiant est déjà inscrit à ce cours pour le même semestre et année scolaire.');
+                }
+
                 Inscrit::create([
                     'id_etudiant' => $id_etudiant,
                     'id_cours' => $id_cours,
@@ -76,22 +81,60 @@ class InscritController extends Controller
                 ]);
             }
 
-            // Validation réussie, on commit la transaction
             DB::commit();
-
-            // Redirection avec un message de succès
             return redirect()->route('etudiant')->with('success', 'Inscription réussie !');
 
         } catch (\Exception $e) {
-            // En cas d'erreur, rollback de la transaction
             DB::rollback();
-
-            // Retourner à la page précédente avec les erreurs et les données soumises
+            if ($e->getMessage() === 'L\'étudiant est déjà inscrit à ce cours pour le même semestre et année scolaire.') {
+                return redirect()->route('etudiant')->withErrors(['error' => $e->getMessage()]);
+            }
             return redirect()->back()->withErrors(['error' => $e->getMessage()])->withInput();
         }
     }
 
 
+
+
+
+
+
+//    public function etudiantInsc($cours_id, $semestre, $annee_scolaire)
+//    {
+//        $cours = Cours::with(['etudiants' => function($query) use ($semestre, $annee_scolaire) {
+//            $query->wherePivot('semestre', $semestre)
+//                ->wherePivot('annee_scolaire', $annee_scolaire);
+//        }])->findOrFail($cours_id);
+//
+//        $etudiants = $cours->etudiants;
+//
+//        $devoirs = Devoir::where('id_cours', $cours_id)
+//            ->where('semestre', $semestre)
+//            ->where('annee_scolaire', $annee_scolaire)
+//            ->get();
+//        return view('prof.etudiant', compact('cours', 'etudiants', 'semestre', 'annee_scolaire', 'devoirs'));
+//    }
+
+
+//    public function etudiantInsc($cours_id, $semestre, $annee_scolaire)
+//    {
+//        // Charger le cours et les étudiants inscrits
+//        $cours = Cours::with(['etudiants' => function($query) use ($semestre, $annee_scolaire) {
+//            $query->wherePivot('semestre', $semestre)
+//                ->wherePivot('annee_scolaire', $annee_scolaire);
+//        }])->findOrFail($cours_id);
+//
+//        // Charger les devoirs pour le cours spécifié
+//        $devoirs = Devoir::where('id_cours', $cours_id)
+//            ->where('semestre', $semestre)
+//            ->where('annee_scolaire', $annee_scolaire)
+//            ->get();
+//
+//        // Charger les notes des étudiants pour chaque devoir
+//        $notes = Note::whereIn('id_devoir', $devoirs->pluck('id'))->get();
+//
+//        return view('prof.etudiant', compact('cours', 'devoirs', 'semestre', 'annee_scolaire', 'notes'));
+//    }
 
 
 
@@ -101,16 +144,23 @@ class InscritController extends Controller
             $query->wherePivot('semestre', $semestre)
                 ->wherePivot('annee_scolaire', $annee_scolaire);
         }])->findOrFail($cours_id);
+
         $etudiants = $cours->etudiants;
-        return view('prof.etudiant', compact('cours', 'etudiants', 'semestre', 'annee_scolaire'));
+
+        // Charger les devoirs pour le cours spécifié
+        $devoirs = Devoir::where('id_cours', $cours_id)
+            ->where('semestre', $semestre)
+            ->where('annee_scolaire', $annee_scolaire)
+            ->with('notes')
+            ->get();
+
+        return view('prof.etudiant', compact('cours', 'etudiants', 'semestre', 'annee_scolaire', 'devoirs'));
     }
+
 
     public function acceuil($id_cours)
     {
-        // Récupérer les informations du cours en fonction de $id_cours
-        $cours = Cours::findOrFail($id_cours); // Supposant que Cours est le modèle pour les cours
-
-        // Passer les informations du cours à la vue
+        $cours = Cours::findOrFail($id_cours);
         return view('prof.acceuil', compact('cours'));
     }
 

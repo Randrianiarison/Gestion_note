@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DevoirController;
 use App\Http\Controllers\InscritController;
+use App\Http\Controllers\NoteController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -54,7 +55,6 @@ Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update')
 
 
 Route::get('/inscription', [InscritController::class, 'index'])->name('inscription.home');
-//Route::post('/inscription',[InscritController::class,'store'])->name('inscription.store');
 Route::get('/cours/{cours_id}/etudiants/{semestre}/{annee_scolaire}', [InscritController::class, 'etudiantInsc'])->name('cours.etudiants.inscrits');
 Route::get('inscription/acceuil/{id_cours}', [InscritController::class, 'acceuil'])->name('inscription.acceuil');
 Route::post('/inscription/store', [InscritController::class, 'store'])->name('inscription.store');
@@ -65,8 +65,15 @@ Route::post('/inscription/store', [InscritController::class, 'store'])->name('in
 
 
 Route::get('/pro',[CoursController::class,'ProfCours'])->name('prof.home');
-
-Route::get('/devoir',[DevoirController::class,'index'])->name('devoir.home');
+Route::post('/devoirs/store', [DevoirController::class, 'store'])->name('devoir.store');
 Route::post('/devoirs', [DevoirController::class, 'store'])->name('devoirs.store');
 Route::get('/{cours_id}/etudiants/{semestre}/{annee_scolaire}', [DevoirController::class, 'etudiantInsc'])->name('cours.etudiants.devoir');
+Route::get('/cours/{id_cours}/semestre/{semestre}/annee_scolaire/{annee_scolaire}/devoirs', [DevoirController::class, 'show'])
+    ->name('devoir.show');
+
+
+
+
+Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
+Route::get('/cours/{cours_id}/semestre/{semestre}/annee/{annee_scolaire}/somme-notes', [NoteController::class, 'calculerSommeNotes'])->name('cours.somme_notes');
 

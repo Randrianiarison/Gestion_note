@@ -101,38 +101,12 @@
         </div>
     @endif
 <div class="container mt-5">
+
     <h1 class="mb-4">Liste des Devoirs</h1>
     <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal">
         Ajouter
     </button>
-    <table class="table table-bordered table-striped">
-        <thead class="thead-dark">
-        <tr>
-            <th>Titre</th>
-            <th>Description</th>
-            <th>Commentaire</th>
-            <th>Date de Création</th>
-            <th>Dernière Mise à Jour</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach($devoir as $d)
-            <tr>
-                <td>{{ $d->titre }}</td>
-                <td>{{ $d->description }}</td>
-                <td>{{ $d->commentaire }}</td>
-                <td>{{ $d->created_at->format('d/m/Y H:i') }}</td>
-                <td>{{ $d->updated_at->format('d/m/Y H:i') }}</td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-primary">Note</button>
-                    <button type="button" class="btn btn-sm btn-danger">Etudiant</button>
-                </td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
-</div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
