@@ -43,17 +43,6 @@
 
         <!-- Nav Item - Dashboard -->
         <li class="nav-item active">
-            <a class="nav-link" href="{{route('home')}}">
-                <i class="fas fa-fw fa-home"></i>
-                <span>Home</span></a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider">
-        <hr class="sidebar-divider my-0">
-
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item active">
             <a class="nav-link" href="#">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Dashboard</span></a>

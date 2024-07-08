@@ -36,17 +36,7 @@
             </div>
             <div class="sidebar-brand-text mx-3">UAZ</div>
         </a>
-        <hr class="sidebar-divider my-0">
 
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item active">
-            <a class="nav-link" href="{{route('home')}}">
-                <i class="fas fa-fw fa-home"></i>
-                <span>Home</span></a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider">
 
         <!-- Divider -->
         <hr class="sidebar-divider my-0">

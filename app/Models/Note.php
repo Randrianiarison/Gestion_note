@@ -14,6 +14,11 @@ class Note extends Model
         'note',
     ];
 
+    public static function get()
+    {
+
+    }
+
     public function devoir()
     {
         return $this->belongsTo(Devoir::class, 'id_devoir');

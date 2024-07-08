@@ -150,6 +150,10 @@
 
 
 
+
+
+
+
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -183,6 +187,9 @@
         </div>
     </div>
 </div>
+
+
+
 <!-- jQuery and Bootstrap Bundle with Popper -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
@@ -213,6 +220,12 @@
         });
     });
 </script>
+
+
+
+
+
+
 
 
 </body>

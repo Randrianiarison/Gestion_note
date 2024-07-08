@@ -3,6 +3,7 @@
 use App\Http\Controllers\DevoirController;
 use App\Http\Controllers\InscritController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\PdfController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -77,3 +78,6 @@ Route::get('/cours/{id_cours}/semestre/{semestre}/annee_scolaire/{annee_scolaire
 Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
 Route::get('/cours/{cours_id}/semestre/{semestre}/annee/{annee_scolaire}/somme-notes', [NoteController::class, 'calculerSommeNotes'])->name('cours.somme_notes');
 
+
+
+Route::get('/notes/pdf/{cours_id}/{semestre}/{annee_scolaire}', [PdfController::class, 'generatePDF']);

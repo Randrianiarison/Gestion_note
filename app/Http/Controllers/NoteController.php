@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cours;
 use App\Models\Devoir;
 use App\Models\Etudiant;
 use App\Models\Note;
@@ -38,6 +39,9 @@ class NoteController extends Controller
 
 
 
+
+
+
     public function calculerSommeNotes($cours_id, $semestre, $annee_scolaire)
     {
         $devoirs = Devoir::where('id_cours', $cours_id)
@@ -53,7 +57,7 @@ class NoteController extends Controller
 
         $maxPossibleScore = count($devoirs) * 20;
         $sommeNotesNormalized = $sommeNotes->map(function ($totalScore) use ($maxPossibleScore) {
-            return ($totalScore / $maxPossibleScore) * 20;
+            return number_format(($totalScore / $maxPossibleScore) * 20, 2);
         });
 
         $etudiants = Etudiant::whereHas('inscrits', function ($query) use ($cours_id, $semestre, $annee_scolaire) {
@@ -62,12 +66,16 @@ class NoteController extends Controller
                 ->where('annee_scolaire', $annee_scolaire);
         })->get();
 
+        $cours = Cours::find($cours_id);
+        $titre_cours = $cours ? $cours->titre : 'Cours inconnu';
+
         $etudiants->each(function ($etudiant) use ($sommeNotesNormalized) {
             $etudiant->somme_notes = $sommeNotesNormalized->get($etudiant->id, 0);
         });
-        return view('prof.note', compact('etudiants', 'cours_id', 'semestre', 'annee_scolaire'));
 
+        return view('prof.note', compact('titre_cours', 'etudiants', 'cours_id', 'semestre', 'annee_scolaire'));
     }
+
 
 
 

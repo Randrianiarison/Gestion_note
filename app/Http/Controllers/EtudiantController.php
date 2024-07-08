@@ -14,11 +14,7 @@ class EtudiantController extends Controller
     public function index(){
         $etudiants = Etudiant::all();
         $cours = Cours::all();
-        $users= User::all();
-//        if (request()->ajax()) {
-//            return response()->json($etudiants);
-//        }
-//        return response()->json($etudiants);
+        $users= User::all();;
          return view('student.index', compact('etudiants','cours','users'));
 
     }

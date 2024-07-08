@@ -69,9 +69,6 @@
                     <a class="nav-link" href="{{route('prof.home')}}">Accueil <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="#">Note</a>
                 </li>
                 <li class="nav-item">
@@ -89,12 +86,22 @@
 
 <!-- Page Content -->
 <div class="container">
+    <div class="row mt-4">
+    </div>
+
     <div class="row">
         <div class="col-md-12">
             <h2>Somme des notes des étudiants</h2>
-            <p><strong>Cours ID:</strong> {{ $cours_id }}</p>
+            <p><strong>Cours ID:</strong> {{ $titre_cours }}</p>
             <p><strong>Semestre:</strong> {{ $semestre }}</p>
             <p><strong>Année scolaire:</strong> {{ $annee_scolaire }}</p>
+        </div>
+    </div>
+
+
+    <div class="row mt-4">
+        <div class="col-md-12 d-flex justify-content-end mb-3">
+            <a href="{{ url('/notes/pdf/' . $cours_id . '/' . $semestre . '/' . $annee_scolaire) }}" class="btn btn-primary">Télécharger PDF</a>
         </div>
     </div>
 
@@ -120,7 +127,6 @@
     </div>
 </div>
 <!-- End Page Content -->
-
 
 
 
