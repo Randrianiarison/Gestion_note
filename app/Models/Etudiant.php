@@ -25,4 +25,15 @@ class Etudiant extends Model
             ->withPivot('semestre', 'annee_scolaire')
             ->withTimestamps();
     }
+//
+//    public function cours()
+//    {
+//        return $this->belongsToMany(Cours::class, 'inscrits', 'id_etudiant', 'id_cours');
+//    }
+
+    public function notes()
+    {
+        return $this->hasManyThrough(Note::class, Devoir::class, 'id_cours', 'id_devoir', 'id', 'id');
+    }
+
 }

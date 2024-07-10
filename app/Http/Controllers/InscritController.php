@@ -147,7 +147,6 @@ class InscritController extends Controller
 
         $etudiants = $cours->etudiants;
 
-        // Charger les devoirs pour le cours spécifié
         $devoirs = Devoir::where('id_cours', $cours_id)
             ->where('semestre', $semestre)
             ->where('annee_scolaire', $annee_scolaire)

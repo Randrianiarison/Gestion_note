@@ -18,10 +18,32 @@ class Cours extends Model
         return $this->hasMany(Inscrit::class, 'id_cours');
     }
 
+//    public function etudiants()
+//    {
+//        return $this->belongsToMany(Etudiant::class, 'inscrits', 'id_cours', 'id_etudiant')
+//            ->withPivot('semestre', 'annee_scolaire')
+//            ->withTimestamps();
+//    }
+//    public function etudiants()
+//    {
+//        return $this->belongsToMany(Etudiant::class, 'inscrits', 'id_cours', 'id_etudiant');
+//    }
     public function etudiants()
     {
         return $this->belongsToMany(Etudiant::class, 'inscrits', 'id_cours', 'id_etudiant')
             ->withPivot('semestre', 'annee_scolaire')
             ->withTimestamps();
+    }
+
+    public function notes()
+    {
+        return $this->hasMany(Note::class, 'id_cours');
+    }
+
+
+
+    public function devoirs()
+    {
+        return $this->hasMany(Devoir::class, 'id_cours');
     }
 }

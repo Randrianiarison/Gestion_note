@@ -23,7 +23,7 @@ use App\Http\Controllers\UserController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Auth::routes();
@@ -81,3 +81,11 @@ Route::get('/cours/{cours_id}/semestre/{semestre}/annee/{annee_scolaire}/somme-n
 
 
 Route::get('/notes/pdf/{cours_id}/{semestre}/{annee_scolaire}', [PdfController::class, 'generatePDF']);
+Route::get('/afficher-notes', [NoteController::class, 'afficherNotes'])->name('afficher.notes');
+Route::get('/etudiant/{idEtudiant}', [NoteController::class, 'afficherMoyenneEtudiant'])->name('etudiant.moyenne');
+Route::get('/etudiants/{idEtudiant}/moyenne', [PdfController::class, 'afficherMoyenneEtudiant'])->name('etudiants.moyenne');
+
+
+Route::get('/professeur/moyennes', [NoteController::class, 'afficherMoyennes'])
+    ->name('professeur.moyennes')
+    ->middleware('auth');

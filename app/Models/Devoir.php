@@ -21,4 +21,9 @@ class Devoir extends Model
     {
         return $this->hasMany(Note::class, 'id_devoir');
     }
+    public function cours()
+    {
+        return $this->belongsTo(Cours::class, 'id_cours');
+    }
+
 }

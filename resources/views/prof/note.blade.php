@@ -72,13 +72,13 @@
                     <a class="nav-link" href="#">Note</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Aide</a>
+                    <a class="nav-link" href="https://mail.google.com/mail/u/0/#sent?compose=new" target="_blank">Email</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.facebook.com/profile.php?id=100077201632825" target="_blank">Aide</a>
+                </li>
+
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Recherche" aria-label="Recherche">
-                <button class="btn btn-light my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
-            </form>
         </div>
     </div>
 </nav>
@@ -91,7 +91,6 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h2>Somme des notes des étudiants</h2>
             <p><strong>Cours ID:</strong> {{ $titre_cours }}</p>
             <p><strong>Semestre:</strong> {{ $semestre }}</p>
             <p><strong>Année scolaire:</strong> {{ $annee_scolaire }}</p>

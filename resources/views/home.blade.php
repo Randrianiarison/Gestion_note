@@ -93,7 +93,7 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">UAZ:</h6>
-                        <a class="collapse-item" href="login.html">Liste</a>
+                        <a class="collapse-item" href="{{route('afficher.notes')}}">Liste</a>
                     </div>
                 </div>
             </li>

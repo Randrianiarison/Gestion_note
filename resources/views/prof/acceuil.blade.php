@@ -28,6 +28,8 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
+
+    <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
@@ -36,10 +38,11 @@
             </div>
             <div class="sidebar-brand-text mx-3">UAZ</div>
         </a>
-
-        <!-- Divider -->
         <hr class="sidebar-divider my-0">
 
+        <!-- Nav Item - Dashboard -->
+
+        <!-- Divider -->
         <!-- Nav Item - Dashboard -->
         <li class="nav-item active">
             <a class="nav-link" href="#">
@@ -52,19 +55,20 @@
 
         <!-- Heading -->
         <div class="sidebar-heading">
-            Professeur
+            Personne
         </div>
 
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-fw fa-cog"></i>
-                <span>Mes cours</span>
+                <i class="fas fa-fw fa-user"></i>
+                <span>Personne</span>
             </a>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Custom Components:</h6>
-                    <a class="collapse-item" href="buttons.html">Liste</a>
+                    <h6 class="collapse-header">AUZ:</h6>
+                    <a class="collapse-item" href="{{route('user.home')}}">Professeur</a>
+                    <a class="collapse-item" href="{{ route('etudiant') }}">Etudiant</a>
                 </div>
             </div>
         </li>
@@ -72,13 +76,13 @@
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-fw fa-wrench"></i>
-                <span>Devoir</span>
+                <i class="fas fa-fw fa-book"></i>
+                <span>Cours</span>
             </a>
             <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Custom Utilities:</h6>
-                    <a class="collapse-item" href="utilities-color.html">Liste</a>
+                    <h6 class="collapse-header">UAZ:</h6>
+                    <a class="collapse-item" href="{{ route('cours.home') }}">Liste</a>
                 </div>
             </div>
         </li>
@@ -90,12 +94,11 @@
             </a>
             <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Login Screens:</h6>
-                    <a class="collapse-item" href="login.html">Liste</a>
+                    <h6 class="collapse-header">UAZ:</h6>
+                    <a class="collapse-item" href="{{route('afficher.notes')}}">Liste</a>
                 </div>
             </div>
         </li>
-
         <!-- Sidebar Message -->
         <div class="sidebar-card d-none d-lg-flex">
             <img class="sidebar-card-illustration mb-2" src="img/undraw_rocket.svg" alt="...">
@@ -165,22 +168,35 @@
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
-
-
-
-
-                    <!-- Affichage de l'ID du cours dans la vue -->
-                    <div>
-                        <p>ID du cours : {{ $cours->id }}</p>
-                    </div>
-
-
-
-
-
-            </div>
-
-
+            <div class="container-fluid">
+                <div class="container mt-5">
+                    <h2>Moyennes des étudiants par cours</h2>
+                    @foreach($cours as $unCours)
+                        <h3>{{ $unCours->titre }}</h3>
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Étudiant</th>
+                                <th>Moyenne</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if(isset($moyennes[$unCours->id]))
+                                @foreach($moyennes[$unCours->id] as $moyenne)
+                                    <tr>
+                                        <td>{{ $moyenne['etudiant']->nom }} {{ $moyenne['etudiant']->prenom }}</td>
+                                        <td>{{ number_format($moyenne['average'], 2) }}</td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="2">Aucune donnée disponible</td>
+                                </tr>
+                            @endif
+                            </tbody>
+                        </table>
+                    @endforeach
+                </div>
         </div>
         <!-- End of Main Content -->
 
@@ -188,7 +204,7 @@
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    {{--                    <span>Gestion de note &copy; Randrianiarison Johnson</span>--}}
+                    {{--                        <span>Gestion de note &copy; Randrianiarison Johnson</span>--}}
                 </div>
             </div>
         </footer>
@@ -199,6 +215,7 @@
 
 </div>
 <!-- End of Page Wrapper -->
+
 
 
 

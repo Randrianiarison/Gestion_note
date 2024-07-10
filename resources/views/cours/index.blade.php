@@ -27,6 +27,7 @@
 <!-- Page Wrapper -->
 <div id="wrapper">
 
+
     <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
         <!-- Sidebar - Brand -->
@@ -36,11 +37,11 @@
             </div>
             <div class="sidebar-brand-text mx-3">UAZ</div>
         </a>
-
-
-        <!-- Divider -->
         <hr class="sidebar-divider my-0">
 
+        <!-- Nav Item - Dashboard -->
+
+        <!-- Divider -->
         <!-- Nav Item - Dashboard -->
         <li class="nav-item active">
             <a class="nav-link" href="#">
@@ -65,7 +66,7 @@
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">AUZ:</h6>
-                    <a class="collapse-item" href="">Professeur</a>
+                    <a class="collapse-item" href="{{route('user.home')}}">Professeur</a>
                     <a class="collapse-item" href="{{ route('etudiant') }}">Etudiant</a>
                 </div>
             </div>
@@ -93,7 +94,7 @@
             <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">UAZ:</h6>
-                    <a class="collapse-item" href="login.html">Liste</a>
+                    <a class="collapse-item" href="{{route('afficher.notes')}}">Liste</a>
                 </div>
             </div>
         </li>
@@ -210,7 +211,6 @@
 
                     </div>
                 </div>
-g
             </div>
 
             <div class="row mt-2 ml-2">

@@ -8,6 +8,8 @@ use App\Models\Devoir;
 use App\Models\Etudiant;
 use App\Models\Note;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Http\Request;
 
 class PdfController extends Controller
@@ -56,4 +58,52 @@ class PdfController extends Controller
 
         return $pdf->download('notes_etudiants.pdf');
     }
+
+
+
+
+
+
+    public function afficherMoyenneEtudiant($idEtudiant)
+    {
+        $etudiant = Etudiant::findOrFail($idEtudiant);
+
+        $cours = Cours::with(['devoirs.notes' => function ($query) use ($idEtudiant) {
+            $query->where('id_etudiant', $idEtudiant);
+        }])->get();
+
+        $moyennes = [];
+
+        foreach ($cours as $unCours) {
+            $notes = $unCours->devoirs->flatMap->notes->where('id_etudiant', $idEtudiant);
+
+            if ($notes->count() > 0) {
+                $average = $notes->avg('note');
+            } else {
+                $average = 0;
+            }
+
+            $moyennes[$unCours->id] = [
+                'cours' => $unCours,
+                'average' => $average,
+            ];
+        }
+
+        $html = view('pdf.etudiant', compact('moyennes', 'etudiant'))->render();
+
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isPhpEnabled', true);
+
+        $dompdf = new Dompdf($options);
+
+        $dompdf->loadHtml($html);
+
+        $dompdf->setPaper('A4', 'portrait');
+
+        $dompdf->render();
+
+        return $dompdf->stream('moyenne_etudiant.pdf');
+    }
+
 }

@@ -7,6 +7,7 @@ use App\Models\Devoir;
 use App\Models\Etudiant;
 use App\Models\Note;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NoteController extends Controller
 {
@@ -76,6 +77,105 @@ class NoteController extends Controller
         return view('prof.note', compact('titre_cours', 'etudiants', 'cours_id', 'semestre', 'annee_scolaire'));
     }
 
+
+
+
+
+    public function afficherNotes()
+    {
+        $cours = Cours::with(['inscrits.etudiant', 'devoirs.notes'])->get();
+
+        $moyennes = [];
+
+        foreach ($cours as $unCours) {
+            foreach ($unCours->inscrits as $inscrit) {
+                $etudiant = $inscrit->etudiant;
+                $notes = Note::where('id_etudiant', $etudiant->id)
+                    ->whereIn('id_devoir', $unCours->devoirs->pluck('id'))
+                    ->get();
+
+                if ($notes->count() > 0) {
+                    $average = $notes->avg('note');
+                } else {
+                    $average = 0;
+                }
+
+                $moyennes[$unCours->id][$etudiant->id] = [
+                    'etudiant' => $etudiant,
+                    'average' => $average,
+                ];
+            }
+        }
+
+        return view('prof.acceuil',  compact('moyennes', 'cours'));
+    }
+
+
+
+
+    public function afficherMoyenneEtudiant($idEtudiant)
+    {
+        $etudiant = Etudiant::findOrFail($idEtudiant);
+        $cours = Cours::with(['devoirs.notes' => function ($query) use ($idEtudiant) {
+            $query->where('id_etudiant', $idEtudiant);
+        }])->get();
+        $moyennes = [];
+
+        foreach ($cours as $unCours) {
+            $notes = $unCours->devoirs->flatMap->notes->where('id_etudiant', $idEtudiant);
+
+            if ($notes->count() > 0) {
+                $average = $notes->avg('note');
+            } else {
+                $average = 0;
+            }
+
+            $moyennes[$unCours->id] = [
+                'cours' => $unCours,
+                'average' => $average,
+            ];
+        }
+
+        return view('student.note', compact('moyennes', 'etudiant'));
+    }
+
+
+
+
+
+
+    public function afficherMoyennes()
+    {
+        // Récupérer l'ID du professeur connecté
+        $idProf = Auth::id();
+
+        // Récupérer les cours enseignés par le professeur
+        $cours = Cours::where('id_prof', $idProf)->with(['inscrits.etudiant', 'devoirs.notes'])->get();
+
+        $moyennes = [];
+
+        // Calculer la moyenne des notes pour chaque étudiant dans chaque cours
+        foreach ($cours as $unCours) {
+            foreach ($unCours->inscrits as $inscrit) {
+                $etudiant = $inscrit->etudiant;
+                $notes = Note::where('id_etudiant', $etudiant->id)
+                    ->whereIn('id_devoir', $unCours->devoirs->pluck('id'))
+                    ->get();
+
+                if ($notes->count() > 0) {
+                    $average = $notes->avg('note');
+                } else {
+                    $average = 0; // Si l'étudiant n'a pas de notes pour ce cours
+                }
+
+                $moyennes[$unCours->id][$etudiant->id] = [
+                    'etudiant' => $etudiant,
+                    'average' => $average,
+                ];
+            }
+        }
+        return view('prof.moyennes', compact('moyennes', 'cours'));
+    }
 
 
 

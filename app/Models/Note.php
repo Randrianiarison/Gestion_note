@@ -28,4 +28,9 @@ class Note extends Model
     {
         return $this->belongsTo(Etudiant::class, 'id_etudiant');
     }
+    public function cours()
+    {
+        return $this->belongsTo(Cours::class, 'id_cours');
+    }
+
 }

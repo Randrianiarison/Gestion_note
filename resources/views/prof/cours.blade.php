@@ -64,21 +64,7 @@
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Custom Components:</h6>
-                    <a class="collapse-item" href="buttons.html">Liste</a>
-                </div>
-            </div>
-        </li>
-
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-fw fa-wrench"></i>
-                <span>Devoir</span>
-            </a>
-            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Custom Utilities:</h6>
-                    <a class="collapse-item" href="utilities-color.html">Liste</a>
+                    <a class="collapse-item" href="{{route('prof.home')}}">Liste</a>
                 </div>
             </div>
         </li>
@@ -91,7 +77,7 @@
             <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Login Screens:</h6>
-                    <a class="collapse-item" href="login.html">Liste</a>
+                    <a class="collapse-item" href="{{ route('professeur.moyennes') }}">Liste</a>
                 </div>
             </div>
         </li>
@@ -183,18 +169,25 @@
                         @if (auth()->check())
                             @php
                                 $user = auth()->user();
+                                  $semestre = '1';
+                                   $annee_scolaire = '2024-2025';
                             @endphp
                             @foreach($cours as $c)
                                 @if ($c->id_prof === $user->id)
                                     <div class="col-md-4 mb-4">
                                         <div class="card">
-                                            <form id="cours-form-{{ $c->id }}" method="GET" action="{{ route('cours.etudiants.inscrits', ['cours_id' => $c->id, 'semestre' => '1', 'annee_scolaire' => '2024-2025']) }}">
+                                            <form id="cours-form-{{ $c->id }}" method="GET" action="{{ route('cours.etudiants.inscrits', ['cours_id' => $c->id, 'semestre' => $semestre, 'annee_scolaire' => $annee_scolaire]) }}">
+
                                                 <div class="card-body">
                                                     <h5 class="card-title text-center text-info">{{ $c->titre }}</h5>
                                                     <div class="form-group">
                                                         <label for="semestre-{{ $c->id }}">Semestre:</label>
-                                                        <input type="number" id="semestre-{{ $c->id }}" name="semestre" class="form-control"max="2" min="1" value="1">
+                                                        <select id="semestre-{{ $c->id }}" name="semestre" class="form-control">
+                                                            <option value="1">1er semestre</option>
+                                                            <option value="2">2e semestre</option>
+                                                        </select>
                                                     </div>
+
                                                     <div class="form-group">
                                                         <label for="annee_scolaire-{{ $c->id }}">Année scolaire:</label>
                                                         <input type="text" id="annee_scolaire-{{ $c->id }}" name="annee_scolaire" class="form-control" value="2024-2025">
@@ -242,15 +235,21 @@
 <!-- End of Page Wrapper -->
 
 
+
+
 <script>
     function submitForm(coursId) {
         const form = document.getElementById(`cours-form-${coursId}`);
         const semestre = document.getElementById(`semestre-${coursId}`).value;
         const anneeScolaire = document.getElementById(`annee_scolaire-${coursId}`).value;
-        form.action = form.action.replace('1', semestre).replace('2024-2025', anneeScolaire);
+        const actionUrl = "{{ route('cours.etudiants.inscrits', ['cours_id' => ':cours_id', 'semestre' => ':semestre', 'annee_scolaire' => ':annee_scolaire']) }}";
+        form.action = actionUrl.replace(':cours_id', coursId).replace(':semestre', semestre).replace(':annee_scolaire', anneeScolaire);
         form.submit();
     }
+
 </script>
+
+
 
 <!-- Bootstrap core JavaScript-->
 <script src="vendor/jquery/jquery.min.js"></script>
