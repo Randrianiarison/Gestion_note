@@ -21,7 +21,7 @@
         }
 
         .navbar-custom {
-            background-color: #4285f4; /* Couleur de fond pour la barre de navigation */
+            background-color: #007bff; /* Couleur de fond pour la barre de navigation */
         }
 
         .navbar-brand {
@@ -35,7 +35,7 @@
         }
 
         .navbar-nav .nav-item .nav-link:hover {
-            color: #f8f9fa;
+            color: #e0e0e0;
         }
 
         .container {
@@ -49,13 +49,44 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
+        .card-header {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+
+        .table thead th {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .text-warning {
+            color: #ffc107;
+        }
+
+        .float-right {
+            float: right;
+        }
+
+        .mb-4-custom {
+            margin-bottom: 1.5rem;
+        }
     </style>
 </head>
 
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary navbar-custom">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
     <div class="container">
         <a class="navbar-brand" href="#">Gestion de Note</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -77,7 +108,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="https://www.facebook.com/profile.php?id=100077201632825" target="_blank">Aide</a>
                 </li>
-
             </ul>
         </div>
     </div>
@@ -87,37 +117,40 @@
 <!-- Page Content -->
 <div class="container">
     <div class="row mt-4">
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <p><strong>Cours ID:</strong> {{ $titre_cours }}</p>
-            <p><strong>Semestre:</strong> {{ $semestre }}</p>
-            <p><strong>Année scolaire:</strong> {{ $annee_scolaire }}</p>
+        <div class="col-md-12 text-center mb-4-custom">
+            <h5 class="display-6">Moyenne des Étudiants pour le Cours {{ $cours->titre }}</h5>
+            <p class="lead">Semestre : {{ $semestre }} - Année Scolaire : {{ $annee_scolaire }}</p>
         </div>
     </div>
 
-
-    <div class="row mt-4">
-        <div class="col-md-12 d-flex justify-content-end mb-3">
-            <a href="{{ url('/notes/pdf/' . $cours_id . '/' . $semestre . '/' . $annee_scolaire) }}" class="btn btn-primary">Télécharger PDF</a>
+    <div class="row mb-4">
+        <div class="col-md-12 text-right">
+            <a href="{{ route('moyennes.pdf', ['id_cours' => $cours->id, 'semestre' => $semestre, 'annee_scolaire' => $annee_scolaire]) }}" class="btn btn-primary btn-lg">
+                Télécharger en PDF
+            </a>
         </div>
     </div>
 
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <table class="table table-bordered">
+    <div class="card mt-5">
+        <div class="card-body">
+            <table class="table table-striped table-bordered">
                 <thead>
                 <tr>
-                    <th>Étudiant</th>
-                    <th>Somme des notes</th>
+                    <th>Nom de l'Étudiant</th>
+                    <th>Moyenne</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach ($etudiants as $etudiant)
                     <tr>
                         <td>{{ $etudiant->nom }} {{ $etudiant->prenom }}</td>
-                        <td>{{ $etudiant->somme_notes }} / 20</td>
+                        <td>
+                            @if (isset($moyennes[$etudiant->id]))
+                                {{ number_format($moyennes[$etudiant->id], 2) }}
+                            @else
+                                <span class="text-warning">Pas de notes disponibles</span>
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
                 </tbody>
@@ -127,14 +160,10 @@
 </div>
 <!-- End Page Content -->
 
-
-
 <!-- jQuery and Bootstrap Bundle with Popper -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-
 
 </body>
 

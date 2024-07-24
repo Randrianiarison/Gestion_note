@@ -68,7 +68,7 @@ class EtudiantController extends Controller
     try {
         $etudiant = Etudiant::findOrFail($id);
         $etudiant->delete();
-        return redirect()->route('etudiant')->with('success', 'Étudiant ajouté ou mis à jour avec succès.');
+        return redirect()->route('etudiant')->with('success', ' succès.');
     } catch (\Throwable $th) {
         return redirect()->route('etudiant')->with('error', 'Erreur.');
     }

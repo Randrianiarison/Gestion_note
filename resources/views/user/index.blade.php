@@ -44,7 +44,7 @@
         <!-- Divider -->
         <!-- Nav Item - Dashboard -->
         <li class="nav-item active">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{route('homeHome')}}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Dashboard</span></a>
         </li>
@@ -81,7 +81,7 @@
             <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">UAZ:</h6>
-                    <a class="collapse-item" href="{{ route('cours.home') }}">Liste</a>
+                    <a class="collapse-item" href="{{ route('cours.index') }}">Liste</a>
                 </div>
             </div>
         </li>
@@ -165,47 +165,45 @@
             </nav>
             <!-- End of Topbar -->
 
-            <div class="container-fluid mr-2">
-                <button type="button" class="btn btn-outline-primary mr-5" data-toggle="modal" data-target="#modal-id"
-                        onclick="setModalAdd()">
-                    Ajouter
-                </button>
-            </div>
-            <div class="row mt-2 ml-2">
-                @foreach($users as $user)
-                    <div class="col-md-4 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h2 class="card-text text-center text-primary">
-                                    @if($user->role_id == 1)
-                                        Administrateur
-                                    @elseif($user->role_id == 2)
-                                        Professeur
-                                    @else
-                                        Inconnu
-                                    @endif
-                                </h2>
-                                <h5 class="card-title">{{ $user->name }}</h5>
-                                <p class="card-text">{{ $user->email }}</p>
-                            </div>
-                            <div class="card-footer">
-                                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-id"
-                                        onclick="setModalEdit({{ $user }})">
-                                    Modifier
-                                </button>
-                                <form action="{{ route('user.delete', $user->id) }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-                                </form>
+            <div class="container-fluid mt-4">
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-outline-primary mr-3" data-toggle="modal" data-target="#modal-id" onclick="setModalAdd()">
+                        <i class="fas fa-plus mr-1"></i> Ajouter
+                    </button>
+                </div>
+
+                <div class="row mt-4">
+                    @foreach($users as $user)
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h2 class="card-title text-center text-primary mb-4">
+                                        @if($user->role_id == 1)
+                                            Administrateur
+                                        @elseif($user->role_id == 2)
+                                            Professeur
+                                        @else
+                                            Inconnu
+                                        @endif
+                                    </h2>
+                                    <h5 class="card-title">{{ $user->name }}</h5>
+                                    <p class="card-text">{{ $user->email }}</p>
+                                </div>
+                                <div class="card-footer d-flex justify-content-between align-items-center">
+                                    <button type="button" class="btn btn-success btn-sm animate__animated animate__fadeInLeft" data-toggle="modal" data-target="#modal-id" onclick="setModalEdit({{ $user }})">
+                                        <i class="fas fa-edit mr-1"></i> Modifier
+                                    </button>
+                                    <form action="{{ route('user.delete', $user->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm animate__animated animate__fadeInRight">Supprimer</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
-
-
-        </div>
         <!-- End of Main Content -->
 
         <!-- Footer -->
@@ -293,7 +291,8 @@
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-<script src="js/sb-admin-2.min.js"></script>
+<script src="js/sb-admin-2.min.js"></script><script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
 
 

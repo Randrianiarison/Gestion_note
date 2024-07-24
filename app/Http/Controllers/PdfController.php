@@ -14,54 +14,6 @@ use Illuminate\Http\Request;
 
 class PdfController extends Controller
 {
-//    public function generatePDF()
-//    {
-//        $etudiants = Etudiant::all();
-//
-//        $pdf = PDF::loadView('prof.pdf', compact('etudiants'));
-//
-//        return $pdf->download('notes_etudiants.pdf');
-//    }
-
-    public function generatePDF($cours_id, $semestre, $annee_scolaire)
-    {
-        $devoirs = Devoir::where('id_cours', $cours_id)
-            ->where('semestre', $semestre)
-            ->where('annee_scolaire', $annee_scolaire)
-            ->pluck('id');
-
-        $notes = Note::whereIn('id_devoir', $devoirs)->get();
-
-        $sommeNotes = $notes->groupBy('id_etudiant')->map(function ($noteGroup) {
-            return $noteGroup->sum('note');
-        });
-
-        $maxPossibleScore = count($devoirs) * 20;
-        $sommeNotesNormalized = $sommeNotes->map(function ($totalScore) use ($maxPossibleScore) {
-            return ($totalScore / $maxPossibleScore) * 20;
-        });
-
-        $etudiants = Etudiant::whereHas('inscrits', function ($query) use ($cours_id, $semestre, $annee_scolaire) {
-            $query->where('id_cours', $cours_id)
-                ->where('semestre', $semestre)
-                ->where('annee_scolaire', $annee_scolaire);
-        })->get();
-
-        $etudiants->each(function ($etudiant) use ($sommeNotesNormalized) {
-            $etudiant->somme_notes = $sommeNotesNormalized->get($etudiant->id, 0);
-        });
-
-        $cours = Cours::find($cours_id);
-        $titre_cours = $cours ? $cours->titre : 'Cours inconnu';
-
-        $pdf = PDF::loadView('prof.pdf', compact('etudiants', 'titre_cours', 'semestre', 'annee_scolaire'));
-
-        return $pdf->download('notes_etudiants.pdf');
-    }
-
-
-
-
 
 
     public function afficherMoyenneEtudiant($idEtudiant)
@@ -70,15 +22,33 @@ class PdfController extends Controller
 
         $cours = Cours::with(['devoirs.notes' => function ($query) use ($idEtudiant) {
             $query->where('id_etudiant', $idEtudiant);
-        }])->get();
+        }, 'categories'])->get();
 
         $moyennes = [];
 
         foreach ($cours as $unCours) {
+            $categories = $unCours->categories;
             $notes = $unCours->devoirs->flatMap->notes->where('id_etudiant', $idEtudiant);
 
-            if ($notes->count() > 0) {
-                $average = $notes->avg('note');
+            $totalNotesPonderees = 0;
+            $totalPourcentage = 0;
+
+            foreach ($categories as $category) {
+                $pourcentageCategory = $category->pourcentage / 100;
+                $devoirsCategory = $unCours->devoirs->where('category_id', $category->id);
+
+                foreach ($devoirsCategory as $devoir) {
+                    $note = $notes->where('id_devoir', $devoir->id)->first();
+
+                    if ($note) {
+                        $totalNotesPonderees += $note->note * $pourcentageCategory;
+                        $totalPourcentage += $pourcentageCategory;
+                    }
+                }
+            }
+
+            if ($totalPourcentage > 0) {
+                $average = $totalNotesPonderees / $totalPourcentage;
             } else {
                 $average = 0;
             }
@@ -96,11 +66,8 @@ class PdfController extends Controller
         $options->set('isPhpEnabled', true);
 
         $dompdf = new Dompdf($options);
-
         $dompdf->loadHtml($html);
-
         $dompdf->setPaper('A4', 'portrait');
-
         $dompdf->render();
 
         return $dompdf->stream('moyenne_etudiant.pdf');

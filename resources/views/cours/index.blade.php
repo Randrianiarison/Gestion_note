@@ -44,7 +44,7 @@
         <!-- Divider -->
         <!-- Nav Item - Dashboard -->
         <li class="nav-item active">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{route('homeHome')}}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Dashboard</span></a>
         </li>
@@ -81,7 +81,7 @@
             <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">UAZ:</h6>
-                    <a class="collapse-item" href="{{ route('cours.home') }}">Liste</a>
+                    <a class="collapse-item" href="">Liste</a>
                 </div>
             </div>
         </li>
@@ -183,34 +183,65 @@
                         onclick="setModalAdd()">
                     Ajouter
                 </button>
-                <div class="container">
-                    <div class="row mt-2 ml-2">
-                        @foreach($cours as $c)
-                            <div class="col-md-4 mb-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ $c->titre }}</h5>
-                                        <p class="card-text">Sigle: {{ $c->sigle }}</p>
-                                    </div>
-                                    <div class="card-footer">
-                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-id" onclick="setModalEdit({{ $c }})">
-                                            Modifier
-                                        </button>
-                                        <form action="{{ route('cours.delete', $c->id) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-                                        </form>
-                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-id" onclick="setModalProf({{$c}})">
-                                            Professeur
-                                        </button>
+{{--                <div class="container">--}}
+{{--                    <div class="row mt-2 ml-2">--}}
+{{--                        @foreach($cours as $c)--}}
+{{--                            <div class="col-md-4 mb-4">--}}
+{{--                                <div class="card">--}}
+{{--                                    <div class="card-body">--}}
+{{--                                        <h5 class="card-title">{{ $c->titre }}</h5>--}}
+{{--                                        <p class="card-text">Sigle: {{ $c->sigle }}</p>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="card-footer">--}}
+{{--                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-id" onclick="setModalEdit({{ $c }})">--}}
+{{--                                            Modifier--}}
+{{--                                        </button>--}}
+{{--                                        <form action="{{ route('cours.delete', $c->id) }}" method="POST" style="display: inline;">--}}
+{{--                                            @csrf--}}
+{{--                                            @method('DELETE')--}}
+{{--                                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>--}}
+{{--                                        </form>--}}
+{{--                                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-id" onclick="setModalProf({{$c}})">--}}
+{{--                                            Professeur--}}
+{{--                                        </button>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        @endforeach--}}
+
+{{--                    </div>--}}
+{{--                </div>--}}
+
+
+                    <div class="container">
+                        <div class="row mt-4 ml-2">
+                            @foreach($cours as $c)
+                                <div class="col-md-4 mb-4">
+                                    <div class="card shadow-sm">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ $c->titre }}</h5>
+                                            <p class="card-text">Sigle: {{ $c->sigle }}</p>
+                                        </div>
+                                        <div class="card-footer bg-white border-top-0 d-flex justify-content-between align-items-center">
+                                            <button type="button" class="btn btn-success btn-sm animate__animated animate__fadeInLeft" data-toggle="modal" data-target="#modal-id" onclick="setModalEdit({{ $c }})">
+                                                Modifier
+                                            </button>
+                                            <form action="{{ route('cours.delete', $c->id) }}" method="POST" style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm animate__animated animate__fadeInRight">Supprimer</button>
+                                            </form>
+                                            <button type="button" class="btn btn-primary btn-sm animate__animated animate__fadeInUp" data-toggle="modal" data-target="#modal-id" onclick="setModalProf({{$c}})">
+                                                Professeur
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
-
+                            @endforeach
+                        </div>
                     </div>
-                </div>
+
+
             </div>
 
             <div class="row mt-2 ml-2">
@@ -224,7 +255,7 @@
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-{{--                    <span>Gestion de note &copy; Randrianiarison Johnson</span>--}}
+                    <span>Gestion de note &copy; Randrianiarison Johnson</span>
                 </div>
             </div>
         </footer>
@@ -296,6 +327,7 @@
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
 <script src="js/sb-admin-2.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
 
 

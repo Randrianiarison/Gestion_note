@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Cours;
 use App\Models\Devoir;
 use App\Models\Etudiant;
@@ -29,7 +30,7 @@ class InscritController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id_etudiant' => 'required|integer', // ajuster selon vos besoins
+            'id_etudiant' => 'required|integer',
             'cours' => 'required|array',
             'cours.*' => 'integer|exists:cours,id',
             'semestre' => 'required|integer|in:1,2',
@@ -61,7 +62,6 @@ class InscritController extends Controller
                 }
                 $id_prof = $coursData->id_prof;
 
-                // Vérifier si l'étudiant est déjà inscrit à ce cours pour le même semestre et année scolaire
                 $existingInscription = Inscrit::where('id_etudiant', $id_etudiant)
                     ->where('id_cours', $id_cours)
                     ->where('semestre', $semestre)
@@ -99,42 +99,6 @@ class InscritController extends Controller
 
 
 
-//    public function etudiantInsc($cours_id, $semestre, $annee_scolaire)
-//    {
-//        $cours = Cours::with(['etudiants' => function($query) use ($semestre, $annee_scolaire) {
-//            $query->wherePivot('semestre', $semestre)
-//                ->wherePivot('annee_scolaire', $annee_scolaire);
-//        }])->findOrFail($cours_id);
-//
-//        $etudiants = $cours->etudiants;
-//
-//        $devoirs = Devoir::where('id_cours', $cours_id)
-//            ->where('semestre', $semestre)
-//            ->where('annee_scolaire', $annee_scolaire)
-//            ->get();
-//        return view('prof.etudiant', compact('cours', 'etudiants', 'semestre', 'annee_scolaire', 'devoirs'));
-//    }
-
-
-//    public function etudiantInsc($cours_id, $semestre, $annee_scolaire)
-//    {
-//        // Charger le cours et les étudiants inscrits
-//        $cours = Cours::with(['etudiants' => function($query) use ($semestre, $annee_scolaire) {
-//            $query->wherePivot('semestre', $semestre)
-//                ->wherePivot('annee_scolaire', $annee_scolaire);
-//        }])->findOrFail($cours_id);
-//
-//        // Charger les devoirs pour le cours spécifié
-//        $devoirs = Devoir::where('id_cours', $cours_id)
-//            ->where('semestre', $semestre)
-//            ->where('annee_scolaire', $annee_scolaire)
-//            ->get();
-//
-//        // Charger les notes des étudiants pour chaque devoir
-//        $notes = Note::whereIn('id_devoir', $devoirs->pluck('id'))->get();
-//
-//        return view('prof.etudiant', compact('cours', 'devoirs', 'semestre', 'annee_scolaire', 'notes'));
-//    }
 
 
 
@@ -152,8 +116,9 @@ class InscritController extends Controller
             ->where('annee_scolaire', $annee_scolaire)
             ->with('notes')
             ->get();
-
-        return view('prof.etudiant', compact('cours', 'etudiants', 'semestre', 'annee_scolaire', 'devoirs'));
+        $categories = Category::where('id_cours', $cours_id)->get();
+        $total = Category::sommePourcentage($cours_id);
+        return view('prof.etudiant', compact('total','categories','cours', 'etudiants', 'semestre', 'annee_scolaire', 'devoirs'));
     }
 
 

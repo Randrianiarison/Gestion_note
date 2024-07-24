@@ -12,6 +12,7 @@
     <title>Gestion de Note</title>
 
     <!-- Custom fonts for this template-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
@@ -21,7 +22,22 @@
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
-
+<style>
+    .card-title {
+        font-weight: bold;
+    }
+    .card-text {
+        font-size: 2.5rem;
+        color: #4e73df;
+    }
+    .card {
+        border-radius: 15px;
+        transition: transform 0.3s;
+    }
+    .card:hover {
+        transform: scale(1.05);
+    }
+</style>
 <body id="page-top">
 
     <!-- Page Wrapper -->
@@ -43,7 +59,7 @@
             <!-- Divider -->
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{route('homeHome')}}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -80,7 +96,7 @@
                 <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">UAZ:</h6>
-                        <a class="collapse-item" href="{{ route('cours.home') }}">Liste</a>
+                        <a class="collapse-item" href="{{ route('cours.index') }}">Liste</a>
                     </div>
                 </div>
             </li>
@@ -165,48 +181,59 @@
                 </nav>
                 <!-- End of Topbar -->
 
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
+                <div class="container-fluid mt-5">
                     <!-- Content Row -->
-                    <div class="row">
+                    <div class="row justify-content-center">
 
-                        <!-- Border Left Utilities -->
-                        <div class="col-lg-6">
-
-                            <div class="card mb-4 py-3 border-left-primary">
-                                <div class="card-body">
-                                    .border-left-primary
+                        <!-- Card for Total Students -->
+                        <div class="col-lg-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-3 animate__animated animate__fadeInLeft">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Nombre total d'étudiants</h5>
+                                    <p class="card-text">{{ $count }}</p>
                                 </div>
                             </div>
-
-
                         </div>
 
-                        <!-- Border Bottom Utilities -->
-                        <div class="col-lg-6">
-
-                            <div class="card mb-4 py-3 border-bottom-primary">
-                                <div class="card-body">
-                                    .border-bottom-primary
+                        <!-- Card for Total Courses -->
+                        <div class="col-lg-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-3 animate__animated animate__fadeInRight">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Nombre total de cours</h5>
+                                    <p class="card-text">{{ $cours }}</p>
                                 </div>
                             </div>
+                        </div>
 
+                        <!-- Card for Class Average -->
+                        <div class="col-lg-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-3 animate__animated animate__fadeInLeft">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Moyenne de classe</h5>
+                                    <p class="card-text">{{ number_format($moyenne, 2) }}</p>
+                                </div>
+                            </div>
+                        </div>
 
+                        <!-- Card for Total Professors -->
+                        <div class="col-lg-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-3 animate__animated animate__fadeInRight">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Nombre de Prof</h5>
+                                    <p class="card-text">{{ $prof }}</p>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
-
                 </div>
-                <!-- /.container-fluid -->
-
-            </div>
             <!-- End of Main Content -->
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-{{--                        <span>Gestion de note &copy; Randrianiarison Johnson</span>--}}
+                        <span>Gestion de note &copy; Randrianiarison Johnson</span>
                     </div>
                 </div>
             </footer>

@@ -59,7 +59,7 @@
         <!-- Divider -->
         <!-- Nav Item - Dashboard -->
         <li class="nav-item active">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{route('homeHome')}}">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Dashboard</span></a>
         </li>
@@ -96,7 +96,7 @@
             <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">UAZ:</h6>
-                    <a class="collapse-item" href="{{ route('cours.home') }}">Liste</a>
+                    <a class="collapse-item" href="{{ route('cours.index') }}">Liste</a>
                 </div>
             </div>
         </li>
@@ -207,45 +207,84 @@
                         Ajouter
                     </button>
                     <!-- Content Row -->
-                    <div class="row">
+{{--                    <div class="row">--}}
 
-                        <table class="table table-striped m-2">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col">Nom</th>
-                                    <th scope="col">Prénom</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($etudiants as $etudiant)
-                                <tr>
-                                    <td>{{ $etudiant->nom }}</td>
-                                    <td>{{ $etudiant->prenom }}</td>
-                                    <td>{{ $etudiant->email }}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-id"
-                                                onclick="setModalEdit({{ $etudiant }})">
-                                            Modifier
-                                        </button>
-                                        <form action="{{ route('etudiant.delete', $etudiant->id) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-                                        </form>
-                                        <a class="btn btn-info btn-sm" href="{{ route('inscription.home', ['id' => $etudiant->id]) }}">Inscription</a>
-                                        <a class="btn btn-yellow btn-sm custom-yellow" href="{{ route('etudiant.moyenne', ['idEtudiant' => $etudiant->id]) }}">Note</a>
+{{--                        <table class="table table-striped m-2">--}}
+{{--                            <thead class="thead-dark">--}}
+{{--                                <tr>--}}
+{{--                                    <th scope="col">Nom</th>--}}
+{{--                                    <th scope="col">Prénom</th>--}}
+{{--                                    <th scope="col">Email</th>--}}
+{{--                                    <th scope="col">Actions</th>--}}
+{{--                                </tr>--}}
+{{--                            </thead>--}}
+{{--                            <tbody>--}}
+{{--                                @foreach($etudiants as $etudiant)--}}
+{{--                                <tr>--}}
+{{--                                    <td>{{ $etudiant->nom }}</td>--}}
+{{--                                    <td>{{ $etudiant->prenom }}</td>--}}
+{{--                                    <td>{{ $etudiant->email }}</td>--}}
+{{--                                    <td>--}}
+{{--                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-id"--}}
+{{--                                                onclick="setModalEdit({{ $etudiant }})">--}}
+{{--                                            Modifier--}}
+{{--                                        </button>--}}
+{{--                                        <form action="{{ route('etudiant.delete', $etudiant->id) }}" method="POST" style="display: inline;">--}}
+{{--                                            @csrf--}}
+{{--                                            @method('DELETE')--}}
+{{--                                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>--}}
+{{--                                        </form>--}}
+{{--                                        <a class="btn btn-info btn-sm" href="{{ route('inscription.home', ['id' => $etudiant->id]) }}">Inscription</a>--}}
+{{--                                        <a class="btn btn-yellow btn-sm custom-yellow" href="{{ route('etudiant.moyenne', ['idEtudiant' => $etudiant->id]) }}">Note</a>--}}
 
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+{{--                                    </td>--}}
+{{--                                </tr>--}}
+{{--                                @endforeach--}}
+{{--                            </tbody>--}}
+{{--                        </table>--}}
 
 
 
-                    </div>
+{{--                    </div>--}}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-striped m-2">
+                                        <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Nom</th>
+                                            <th scope="col">Prénom</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($etudiants as $etudiant)
+                                            <tr>
+                                                <td>{{ $etudiant->nom }}</td>
+                                                <td>{{ $etudiant->prenom }}</td>
+                                                <td>{{ $etudiant->email }}</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modal-id"
+                                                            onclick="setModalEdit({{ $etudiant }})">
+                                                        Modifier
+                                                    </button>
+                                                    <form action="{{ route('etudiant.delete', $etudiant->id) }}" method="POST" style="display: inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                                    </form>
+                                                    <a class="btn btn-info btn-sm" href="{{ route('inscription.home', ['id' => $etudiant->id]) }}">Inscription</a>
+                                                    <a class="btn btn-yellow btn-sm custom-yellow" href="{{ route('etudiant.moyenne', ['idEtudiant' => $etudiant->id]) }}">Note</a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
 
                 </div>
                 <!-- /.container-fluid -->
@@ -260,7 +299,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-{{--                        <span>Gestion de note &copy; Randrianiarison Johnson</span>--}}
+                        <span>Gestion de note &copy; Randrianiarison Johnson</span>
                     </div>
                 </div>
             </footer>

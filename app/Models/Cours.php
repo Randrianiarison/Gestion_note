@@ -46,4 +46,8 @@ class Cours extends Model
     {
         return $this->hasMany(Devoir::class, 'id_cours');
     }
+    public function categories()
+    {
+        return $this->hasMany(Category::class, 'id_cours');
+    }
 }

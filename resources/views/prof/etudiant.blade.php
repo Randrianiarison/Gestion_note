@@ -49,6 +49,26 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+         .card-header {
+             background-color: #007bff;
+             color: #fff;
+             font-size: 1.25rem;
+         }
+        .list-group-item {
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+            margin-bottom: 5px;
+            padding: 10px;
+            font-size: 0.875rem;
+        }
+        .container {
+            padding: 20px;        }
+        .card {
+            margin-bottom: 15px;
+        }
+        .card-body {
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 
@@ -72,7 +92,7 @@
 
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('cours.somme_notes', ['cours_id' => $cours->id, 'semestre' => $semestre, 'annee_scolaire' => $annee_scolaire]) }}" class="nav-link">
+                    <a href="{{ route('notes.moyennes', ['id' => $cours->id, 'semestre' => $semestre, 'annee_scolaire' => $annee_scolaire]) }}" class="nav-link">
                          Notes
                     </a>
                 </li>
@@ -87,19 +107,87 @@
 
 <!-- Page Content -->
 <div class="container">
-    <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#exampleModal">
-        Ajouter
-    </button>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>Détails du cours</h2>
-                <p><strong>Titre du cours:</strong> {{ $cours->titre }}</p>
-                <p><strong>Semestre:</strong> {{ $semestre }}</p>
-                <p><strong>Année scolaire:</strong> {{ $annee_scolaire }}</p>
+    <!-- Affichage des messages de succès -->
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
 
+    <!-- Affichage des messages d'erreur -->
+    @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Erreur!</strong> Veuillez vérifier les champs suivants.
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+    <div class="mb-2">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            Ajouter devoir
+        </button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCategoryModal">
+            Ajouter une Catégorie
+        </button>
+    </div>
+
+    <!-- Détails du Cours et Types de Devoirs -->
+    <div class="mt-4">
+        <div class="row">
+            <!-- Détails du Cours -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Détails du Cours</h2>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Titre du cours:</strong> {{ $cours->titre }}</p>
+                        <p><strong>Semestre:</strong> {{ $semestre }}</p>
+                        <p><strong>Année scolaire:</strong> {{ $annee_scolaire }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Types de Devoirs et Pourcentages -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Types de Devoirs et Pourcentages</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            @foreach ($categories as $category)
+                                <li class="list-group-item">
+                                    <strong>{{ $category->type_devoir }}:</strong>
+                                    {{ number_format($category->pourcentage, 0) }}%
+                                    <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm float-right" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?');">Supprimer</button>
+                                    </form>
+                                </li>
+                            @endforeach
+                        </ul>
+                        <hr>
+                        <li class="list-group-item">
+                            <strong>Total des Pourcentages:</strong> {{ number_format($total, 0) }}%
+                        </li>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+
+
 
         <div class="row mt-4">
             <div class="col-md-12">
@@ -171,7 +259,14 @@
                         <label for="titre">Titre</label>
                         <input type="text" class="form-control" id="titre" name="titre" required>
                     </div>
-
+                    <div class="form-group">
+                        <label for="type_devoir_id">Type de Devoir</label>
+                        <select class="form-control" id="type_devoir_id" name="type_devoir_id" required>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->type_devoir }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label for="description">Description</label>
                         <textarea class="form-control" id="description" name="description"></textarea>
@@ -180,6 +275,45 @@
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
                 </form>
             </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- Modal pour Ajouter une Catégorie -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCategoryModalLabel">Ajouter une Catégorie</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="addCategoryForm" method="POST" action="{{route('categories.store')}}">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="type_devoir">Type de Devoir</label>
+                        <input type="text" class="form-control" id="type_devoir" name="type_devoir" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pourcentage">Pourcentage</label>
+                        <input type="number" class="form-control" id="pourcentage" name="pourcentage" min="0" max="100" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" id="id_cours" name="id_cours" value="{{ $cours->id }}"">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

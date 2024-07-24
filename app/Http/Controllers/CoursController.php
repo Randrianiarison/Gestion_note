@@ -11,7 +11,7 @@ class CoursController extends Controller
     public function index(){
         $cours = Cours::all();
         $prof = User::where('role_id', 2)->get();
-        return view('cours.index', compact('cours', 'prof'));
+        return view('prof.cours', compact('cours', 'prof'));
     }
 
 
@@ -94,7 +94,8 @@ class CoursController extends Controller
 
     public function ProfCours(){
         $cours = Cours::all();
-        return view('prof.cours',compact('cours'));
+        $prof = User::all();
+        return view('cours.index',compact('cours','prof'));
     }
 
 

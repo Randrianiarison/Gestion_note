@@ -12,6 +12,7 @@ class Devoir extends Model
         'id_prof',
         'id_cours',
         'titre',
+        'category_id',
         'description',
         'semestre',
         'annee_scolaire'
@@ -25,5 +26,11 @@ class Devoir extends Model
     {
         return $this->belongsTo(Cours::class, 'id_cours');
     }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
 
 }

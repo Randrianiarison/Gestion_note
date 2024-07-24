@@ -1,39 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Notes des Étudiants</title>
+    <meta charset="utf-8">
+    <title>Moyennes des Étudiants</title>
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f4f4f4; }
+        h1 { text-align: center; }
     </style>
 </head>
 <body>
-<h2>Liste de note des étudiants</h2>
-<p><strong>Cours:</strong> {{ $titre_cours }}</p>
-<p><strong>Semestre:</strong> {{ $semestre }}</p>
-<p><strong>Année scolaire:</strong> {{ $annee_scolaire }}</p>
-
+<h1>Moyennes des Étudiants pour le Cours : {{ $cours->titre }}</h1>
+<p>Semestre : {{ $semestre }} - Année Scolaire : {{ $annee_scolaire }}</p>
 <table>
     <thead>
     <tr>
-        <th>Étudiant</th>
-        <th>Somme des notes</th>
+        <th>Nom de l'étudiant</th>
+        <th>Moyenne (sur 20)</th>
     </tr>
     </thead>
     <tbody>
     @foreach ($etudiants as $etudiant)
         <tr>
             <td>{{ $etudiant->nom }} {{ $etudiant->prenom }}</td>
-            <td>{{ $etudiant->somme_notes }} / 20</td>
+            <td>
+                @if (isset($moyennes[$etudiant->id]))
+                    {{ $moyennes[$etudiant->id] }}
+                @else
+                    Pas de notes disponibles
+                @endif
+            </td>
         </tr>
     @endforeach
     </tbody>
